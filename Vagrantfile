@@ -24,18 +24,6 @@ class MLSA
     end
 end
 
-$knifescript = <<-SCRIPT
-cat > /home/vagrant/user1/knife.rb <<EOF
-current_dir = File.dirname(__FILE__)
-
-node_name "user1"
-chef_server_url "https://chef-automate.test/organizations/chef_foundations"
-client_key "\#{current_dir}/user1.pem"
-ssl_verify_mode :verify_none
-EOF
-sudo chown vagrant /home/vagrant/user1/knife.rb
-SCRIPT
-
 Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |v|
     v.memory = 4096
@@ -55,7 +43,6 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", inline: "sudo chef-server-ctl org-create chef_foundations 'Chef Foundations'"
   config.vm.provision "shell", inline: "sudo mkdir -p /home/vagrant/user1"
-  config.vm.provision "shell", inline: $knifescript
   config.vm.provision "shell", inline: "sudo chef-server-ctl user-create user1 Chef1 User example1@test.com PASSWD1 -f /home/vagrant/user1/user1.pem"
   config.vm.provision "shell", inline: "sudo chef-server-ctl org-user-add chef_foundations user1 -a"
 
