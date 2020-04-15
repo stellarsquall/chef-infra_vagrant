@@ -40,12 +40,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: "echo 192.168.33.199 chef-automate.test | sudo tee -a /etc/hosts"
   config.vm.provision "shell", inline: "curl -s https://packages.chef.io/files/current/automate/latest/chef-automate_linux_amd64.zip | gunzip - > chef-automate && chmod +x chef-automate"
   config.vm.provision "shell", env: {"RESPONSE" => MLSA.new}, inline: $mlsascript
-
   config.vm.provision "shell", inline: "sudo chef-server-ctl org-create chef_foundations 'Chef Foundations'"
-  config.vm.provision "shell", inline: "sudo mkdir -p /home/vagrant/user1"
-  config.vm.provision "shell", inline: "sudo chef-server-ctl user-create user1 Chef1 User example1@test.com PASSWD1 -f /home/vagrant/user1/user1.pem"
+  config.vm.provision "shell", inline: "sudo chef-server-ctl user-create user1 Chef1 User example1@test.com PASSWD1 -f /home/vagrant/user1.pem"
   config.vm.provision "shell", inline: "sudo chef-server-ctl org-user-add chef_foundations user1 -a"
-
   config.vm.provision "shell", inline: $tokenscript
   config.vm.provision "shell", inline: "apt-get clean"
   config.vm.provision "shell", inline: "echo 'Server is up. Please log in at https://chef-automate.test/'"
